@@ -132,6 +132,16 @@ struct ContentView: View {
                         }
                         .frame(height: 4)
                         
+                        // Access Level
+                        HStack {
+                            Text("ACCESS_LEVEL:")
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.green)
+                            Text(accessLevel(score))
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.yellow)
+                        }
+
                         // Input Area
                         HStack {
                             Text(">")
@@ -179,11 +189,28 @@ struct ContentView: View {
         }
     }
     
+    func accessLevel(_ score: Int) -> String {
+        switch score {
+        case 0..<5: return "SCRIPT_KIDDIE"
+        case 5..<10: return "GREY_HAT"
+        case 10..<20: return "BLACK_HAT"
+        case 20..<50: return "CYBER_WARLORD"
+        default: return "ANONYMOUS_ENTITY"
+        }
+    }
+    
     func checkInput() {
         if input == targetCommand {
             score += 1
             timeLeft += 2.0 // Bonus time
             addLog("ACCESS_GRANTED: \(targetCommand)", .green)
+            
+            // "Hack the Planet" Easter Egg
+            if score % 10 == 0 {
+                addLog(">>> GLOBAL_BROADCAST: HACK THE PLANET! <<<", .purple)
+                timeLeft += 5.0
+            }
+            
             nextCommand()
             
             // Haptic feedback
